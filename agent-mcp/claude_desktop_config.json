@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "thermostat": {
+      "command": "python",
+      "args": ["/Users/benny/dev/ai/thermostat/agent-mcp/thermostat/server.py"]
+    },
+    "birthdays": {
+      "command": "python",
+      "args": ["/Users/benny/dev/ai/thermostat/agent-mcp/birthdays/server.py"]
+    }
+  }
+}

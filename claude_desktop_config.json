@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "thermostat": {
+      "command": "python",
+      "args": ["/Users/benny/dev/ai/thermostat/server.py"],
+      "env": {}
+    }
+  }
+}
