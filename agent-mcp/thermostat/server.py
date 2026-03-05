@@ -6,8 +6,9 @@ Exposes all thermostat controls as MCP tools and a live-status resource.
 Run (stdio transport, for Claude Desktop / MCP clients):
     python server.py
 
-Run (SSE transport, for network clients):
-    python server.py --transport sse --port 8001
+Run (SSE transport, for claude.ai connector / network clients):
+    python server.py --transport sse --port 9000
+    → give claude.ai: https://9000yo372002.ngrok.io/sse
 """
 import json
 from mcp.server.fastmcp import FastMCP

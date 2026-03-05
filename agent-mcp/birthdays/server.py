@@ -5,6 +5,10 @@ Exposes birthday CRUD tools and a live resource over MCP.
 
 Run (stdio transport, for Claude Desktop / MCP clients):
     python server.py
+
+Run (SSE transport, for claude.ai connector / network clients):
+    python server.py --transport sse --port 9001
+    → give claude.ai: https://9001yo372002.ngrok.io/sse
 """
 import json
 from mcp.server.fastmcp import FastMCP
