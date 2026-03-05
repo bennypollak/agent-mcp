@@ -30,6 +30,7 @@ from pydantic import BaseModel
 
 SERVER_PATH = str(Path(__file__).parent / "server.py")
 PYTHON = sys.executable  # venv python that launched this process
+BASE_URL = os.environ.get("THERMOSTAT_BASE_URL", "http://localhost:8000")
 
 SYSTEM_PROMPT = """\
 You are a smart thermostat controller. You manage two rooms:
@@ -40,7 +41,11 @@ Temperatures are always in Fahrenheit.
 Check status first when you need context, then act and confirm the outcome.
 """
 
-app = FastAPI(title="Thermostat Agent", version="2.0.0")
+app = FastAPI(
+    title="Thermostat Agent",
+    version="2.0.0",
+    servers=[{"url": BASE_URL}],
+)
 
 
 # ---------------------------------------------------------------------------

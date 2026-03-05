@@ -30,6 +30,7 @@ from pydantic import BaseModel
 
 SERVER_PATH = str(Path(__file__).parent / "server.py")
 PYTHON = sys.executable  # venv python that launched this process
+BASE_URL = os.environ.get("BIRTHDAYS_BASE_URL", "http://localhost:8001")
 
 SYSTEM_PROMPT = """\
 You are a helpful birthday tracker assistant.
@@ -38,7 +39,11 @@ When listing upcoming birthdays, always mention how many days away they are.
 Respond in a friendly, natural tone.
 """
 
-app = FastAPI(title="Birthdays Agent", version="2.0.0")
+app = FastAPI(
+    title="Birthdays Agent",
+    version="2.0.0",
+    servers=[{"url": BASE_URL}],
+)
 
 
 # ---------------------------------------------------------------------------

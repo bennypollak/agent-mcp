@@ -1,0 +1,97 @@
+openapi: 3.1.0
+info:
+  title: Birthdays Agent
+  description: >
+    Stores and queries birthdays. Accepts natural-language tasks and returns
+    the result plus an action log.
+  version: 2.0.0
+servers:
+  - url: https://8001yo372002.ngrok.io
+paths:
+  /run_task:
+    post:
+      operationId: run_task
+      summary: Run a natural-language birthday task
+      description: >
+        Send any birthday instruction in plain English.
+        Examples: "Add Alice, birthday March 15 1990",
+        "Who has a birthday this week?",
+        "When is Bob's birthday?".
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - task
+              properties:
+                task:
+                  type: string
+                  description: Natural-language birthday instruction
+                  example: Who has a birthday in the next 7 days?
+                model:
+                  type: string
+                  description: LLM to use (default claude-sonnet-4-6)
+                  default: claude-sonnet-4-6
+                  example: gpt-4o
+      responses:
+        "200":
+          description: Task completed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    description: Plain-language summary of what was done
+                  action_log:
+                    type: array
+                    description: Step-by-step log of tool calls made
+                    items:
+                      type: object
+                      properties:
+                        tool:
+                          type: string
+                        args:
+                          type: object
+                        result:
+                          type: string
+                  model:
+                    type: string
+                    description: Model that handled the task
+  /tools:
+    get:
+      operationId: list_tools
+      summary: List available birthday tools
+      description: Returns the tools exposed by the MCP server.
+      responses:
+        "200":
+          description: List of tools
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+  /health:
+    get:
+      operationId: health
+      summary: Health check
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
