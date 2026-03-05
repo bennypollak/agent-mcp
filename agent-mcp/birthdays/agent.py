@@ -5,7 +5,7 @@ Model-agnostic. Tools are loaded dynamically from server.py (MCP) —
 no duplicate tool definitions.
 
 Start:
-    python agent.py          # http://0.0.0.0:8001
+    python agent.py          # http://0.0.0.0:8001  (override with BIRTHDAYS_PORT)
 
 Endpoints:
     POST /run_task   { "task": "...", "model": "claude-sonnet-4-6" }
@@ -208,5 +208,5 @@ def health() -> dict:
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8001))
+    port = int(os.environ.get("BIRTHDAYS_PORT", 8001))
     uvicorn.run(app, host="0.0.0.0", port=port)

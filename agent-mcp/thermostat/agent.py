@@ -5,7 +5,7 @@ Model-agnostic. Tools are loaded dynamically from server.py (MCP) —
 no duplicate tool definitions.
 
 Start:
-    python agent.py          # http://0.0.0.0:8000
+    python agent.py          # http://0.0.0.0:8000  (override with THERMOSTAT_PORT)
 
 Endpoints:
     POST /run_task   { "task": "...", "model": "claude-sonnet-4-6" }
@@ -210,5 +210,5 @@ def health() -> dict:
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
+    port = int(os.environ.get("THERMOSTAT_PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)
