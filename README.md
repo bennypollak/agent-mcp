@@ -20,17 +20,19 @@ A multi-MCP / Claude agent monorepo. Each sub-project exposes a domain as both a
 ├── claude_desktop_config.json    ← single-server Claude Desktop snippet
 │
 └── agent-mcp/                    ← structured multi-project layout
-    ├── claude_desktop_config.json  ← both servers combined
+    ├── gateway.py                ← single-port server (all agents + MCP SSE) :8080
+    ├── claude_desktop_config.json      ← stdio transport (local)
+    ├── claude_desktop_config_sse.json  ← SSE via mcp-remote (remote test)
     ├── thermostat/               ← thermostat sub-project
     │   ├── thermostat_client.py
-    │   ├── server.py             MCP stdio
-    │   ├── agent.py              HTTP :8000
-    │   └── requirements.txt
+    │   ├── server.py             MCP stdio / SSE
+    │   ├── agent.py              HTTP :8000 (standalone)
+    │   └── openapi.yaml
     └── birthdays/                ← birthday tracker sub-project
         ├── birthdays_client.py
-        ├── server.py             MCP stdio
-        ├── agent.py              HTTP :8001
-        ├── requirements.txt
+        ├── server.py             MCP stdio / SSE
+        ├── agent.py              HTTP :8001 (standalone)
+        ├── openapi.yaml
         └── data/
             └── birthdays.json    persisted birthday data
 ```
@@ -124,7 +126,25 @@ python agent-mcp/thermostat/server.py
 python agent-mcp/birthdays/server.py
 ```
 
-### Run agent HTTP services
+### Run the gateway (single port for everything)
+
+```bash
+# All agents + MCP SSE  →  http://localhost:8080
+python agent-mcp/gateway.py
+```
+
+Routes served by the gateway:
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/thermostat/run_task` | Thermostat agent |
+| `GET`  | `/thermostat/tools` | List thermostat tools |
+| `GET`  | `/thermostat/mcp/sse` | Thermostat MCP SSE (for claude.ai) |
+| `POST` | `/birthdays/run_task` | Birthdays agent |
+| `GET`  | `/birthdays/tools` | List birthday tools |
+| `GET`  | `/birthdays/mcp/sse` | Birthdays MCP SSE (for claude.ai) |
+
+### Run individual agent services (standalone)
 
 ```bash
 # Thermostat agent  →  http://localhost:8000
@@ -159,23 +179,23 @@ Merge `agent-mcp/claude_desktop_config.json` into:
 ## Example agent calls
 
 ```bash
-# Thermostat
-curl -X POST http://localhost:8000/run_task \
+# Via gateway (port 8080)
+curl -X POST http://localhost:8080/thermostat/run_task \
      -H "Content-Type: application/json" \
      -d '{"task": "What is the temperature in the bedroom?"}'
 
+curl -X POST http://localhost:8080/birthdays/run_task \
+     -H "Content-Type: application/json" \
+     -d '{"task": "Who has a birthday in the next 30 days?"}'
+
+# Via standalone agents
 curl -X POST http://localhost:8000/run_task \
      -H "Content-Type: application/json" \
      -d '{"task": "Turn on the big room AC and make it 2 degrees cooler"}'
 
-# Birthdays
 curl -X POST http://localhost:8001/run_task \
      -H "Content-Type: application/json" \
      -d '{"task": "Add Alice, birthday March 15 1990, she loves chocolate cake"}'
-
-curl -X POST http://localhost:8001/run_task \
-     -H "Content-Type: application/json" \
-     -d '{"task": "Who has a birthday in the next 30 days?"}'
 ```
 
 ---

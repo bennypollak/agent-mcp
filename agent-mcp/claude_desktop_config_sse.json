@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "thermostat": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://9000yo372002.ngrok.io/sse"]
+    },
+    "birthdays": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://9001yo372002.ngrok.io/sse"]
+    }
+  }
+}
