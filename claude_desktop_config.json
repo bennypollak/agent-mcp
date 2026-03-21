@@ -1,9 +1,44 @@
 {
   "mcpServers": {
-    "thermostat": {
-      "command": "python",
-      "args": ["/Users/benny/dev/ai/thermostat/server.py"],
-      "env": {}
+    "automation": {
+      "command": "/Users/benny/.local/bin/uv",
+      "args": [
+        "run",
+        "--with",
+        "requests",
+        "--with",
+        "mcp[cli]",
+        "python",
+        "/Users/benny/dev/ai/alfred43/alfred-mcp/automation_mcp.py"
+      ],
+      "env": {
+        "PATH": "/usr/local/bin:/usr/bin:/bin",
+        "PYTHONUNBUFFERED": "1",
+        "MCP_LOG_LEVEL": "debug",
+        "LOG_FILE": "/Users/benny/dev/ai/alfred43/alfred.log",
+        "ASK_TOKENS_PATH": "/Users/benny/dev/ai/alfred43/nlu",
+        "DRY_RUN": "true"
+      }
+    },
+    "clock_mcp": {
+      "command": "/Users/benny/.local/bin/uv",
+      "args": [
+        "run",
+        "--with",
+        "requests",
+        "--with",
+        "mcp[cli]",
+        "python",
+        "/Users/benny/dev/ai/alfred43/alfred-mcp/clock_mcp.py"
+      ],
+      "env": {
+        "PATH": "/usr/local/bin:/usr/bin:/bin",
+        "PYTHONUNBUFFERED": "1",
+        "MCP_LOG_LEVEL": "debug"
+      }
     }
+  },
+  "preferences": {
+    "coworkWebSearchEnabled": true
   }
 }
